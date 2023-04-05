@@ -9,4 +9,26 @@
         where id in (select tag_id from ms_article_tag where article_id = #{articleId})
     </select>
 
+    <!-- 查询到的多个集合会自动疯转成 list
+            如果 resultType 写成基本数据类型，mybatis只会返回第一条，如果查询结果是空返回默认值 0 or false
+            而如果写成包装类（如 Integer、Long、Boolean 等）,
+            MyBatis 会将每一行查询结果都映射为一个包装类对象，并将这些对象添加到一个 List 中返回
+            如果查询结果为空，则返回一个空的 List
+     -->
+    <select id="findHotTagIds" parameterType="int" resultType="java.lang.Long">
+        select tag_id from ms_article_tag
+        group by tag_id order by count(*) desc limit #{limit}
+    </select>
+
+
+    <select id="findTagsByTagIds" parameterType="list" resultType="com.lee.blog.dao.pojo.vo.TagVo">
+        select id,tag_name from ms_tag where id in
+        <!--
+            foreach 中的 collection 的名字必须要和 mapper 接口中方法调用时传进的参数名相同
+            集合类型不会像普通类型那样按照类型自动匹配
+        -->
+        <foreach collection="tagIdList" item="tagId" separator="," open="(" close=")">
+            #{tagId}
+        </foreach>
+    </select>
 </mapper>
