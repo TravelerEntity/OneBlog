@@ -10,7 +10,30 @@ import org.springframework.stereotype.Service;
 
 public interface ArticleService {
 
-    // TODO 完成接口实现
+    /**
+     * 分页返回首页文章
+     * @param pageParams 分页对象
+     * @return R
+     */
     R listArticle(PageParams pageParams);
 
+    /**
+     * 返回 首页 热门文章
+     * @param limit 前 limit 条
+     * @return R
+     */
+    R hotArticle(int limit);
+
+    /**
+     * 返回 首页 最新文章
+     * @param limit 前 limit 条
+     * @return R
+     */
+    R newArticle(int limit);
+
+    /**
+     * 返回文章归档信息
+     * @return R
+     */
+    R listArchives();
 }

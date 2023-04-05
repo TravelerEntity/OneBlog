@@ -18,6 +18,6 @@ public class AllExceptionHandler {
     public R doException(Exception ex){
         // 先在控制台输出一下，后面再保存到系统日志中
         ex.printStackTrace();
-        return R.fail(-999,"哎呀，系统异常");
+        return R.fail(-999,"哎呀，系统异常："+ex.getMessage());
     }
 }

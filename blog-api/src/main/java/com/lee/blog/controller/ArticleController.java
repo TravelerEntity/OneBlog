@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Lee Yian on 2023/4/4 17:05
+ * 首页功能接口
  */
 @RestController
 @RequestMapping("articles")
@@ -22,7 +23,36 @@ public class ArticleController {
      * @return R
      */
     @PostMapping()
-    public R listArticle(@RequestBody PageParams pageParams){
+    public R listArticles(@RequestBody PageParams pageParams){
         return articleService.listArticle(pageParams);
+    }
+
+    /**
+     * 首页 热门文章
+     * @return R
+     */
+    @PostMapping("hot")
+    public R hotArticle(){
+        int limit = 5;
+        return articleService.hotArticle(limit);
+    }
+
+    /**
+     * 首页 最新文章
+     * @return R
+     */
+    @PostMapping("new")
+    public R newArticles(){
+        int limit = 5;
+        return articleService.newArticle(limit);
+    }
+
+    /**
+     * 首页 文章归档
+     * @return R
+     */
+    @PostMapping("listArchives")
+    public R listArchives(){
+        return articleService.listArchives();
     }
 }

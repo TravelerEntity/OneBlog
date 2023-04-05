@@ -14,12 +14,16 @@ public class Article {
 
     private String title;
 
+    // 简介
     private String summary;
 
+    // 评论量
     private int commentCounts;
 
+    // 浏览量
     private int viewCounts;
 
+    // 文章权重，1 置顶
     private int weight;
 
     // 作者 Id
