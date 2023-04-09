@@ -23,17 +23,30 @@
             <!-- 排除 默认使用的logback  -->
             <exclusions>
                 <exclusion>
-                    <groupId>org.springframework.b oot</groupId>
+                    <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2 -->
-        <!-- <dependency> -->
-        <!--     <groupId>org.springframework.boot</groupId> -->
-        <!--     <artifactId>spring-boot-starter-log4j2</artifactId> -->
-        <!-- </dependency> -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+
+        <!-- JWT 登录 Token -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
+        <!-- MD5 加解密 -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -55,12 +68,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Redis Starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-
+        <!-- Bean JSON 互转-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
