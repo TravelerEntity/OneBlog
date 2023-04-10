@@ -29,4 +29,17 @@ public interface SysUserService {
      * @return R
      */
     R findUserByToken(String token);
+
+    /**
+     * 通过账号查找用户
+     * @param account 账号
+     * @return SysUser
+     */
+    SysUser findUserByAccount(String account);
+
+    /**
+     * 持久化用户
+     * @param sysUser sysUser
+     */
+    void save(SysUser sysUser);
 }

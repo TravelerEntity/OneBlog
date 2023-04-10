@@ -9,11 +9,11 @@ public enum ErrorCode {
     // 错误码
     PARAMS_ERROR(10001,"参数有误"),
     ACCOUNT_PWD_NOT_EXISTS(10002,"账号或密码错误"),
+    ACCOUNT_ALREADY_EXISTS(10004,"账号已存在"),
     TOKEN_NOT_EXISTS(10002,"Token 无效"),
     NO_PERMISSION(70001,"无访问权限"),
     SESSION_TIMEOUT(90001,"会话过期"),
     NO_LOGIN(90002,"未登录");
-
     private int code;
     private String msg;
 

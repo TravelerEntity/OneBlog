@@ -13,21 +13,26 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 
 /**
  * Created by Lee Yian on 2023/4/5 20:36
+ * 登录相关 service
  */
 @Service
 public class LoginServiceImpl implements LoginService {
-
     // 固定加密盐
     private static final String salt = "Md5_password_salt_2023-04-09-15:18";
+
+    @Value("${default_avatar_count}")
+    private int avatarCount;
 
     Logger logger = LogManager.getLogger(this.getClass());
 
@@ -90,6 +95,7 @@ public class LoginServiceImpl implements LoginService {
             // token 格式错误返回 null
             return R.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
         }
+        // 暂时跳过这些操作
         // Map<String, Object> stringObjectMap = JWTUtils.checkToken(token);
         // if(stringObjectMap == null){
         //     // token 解密失败返回 null
@@ -99,4 +105,64 @@ public class LoginServiceImpl implements LoginService {
         redisTemplate.delete("TOKEN_"+token);
         return R.success(null);
     }
+
+    /**
+     *      1. 参数校验
+     *           - 判断是否为空
+     *           - 判断是否有效
+     *           - 判断账号是否重复
+     *      2. 数据持久化
+     *           - 写入数据库
+     *           - 写入 Redis
+     *      3. return token
+     *
+     * @param loginParam aka 注册参数，登录参数
+     * @return R token
+     */
+    @Override
+    public R register(LoginParam loginParam) {
+        // 1. 参数校验
+        String account = loginParam.getAccount();
+        String password = loginParam.getAccount();
+        String nickname = loginParam.getAccount();
+        // 参数是否有效
+        if(StringUtils.isBlank(account) || StringUtils.isBlank(password) || StringUtils.isBlank(nickname)){
+            return R.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
+        }
+        SysUser sysUser = sysUserService.findUserByAccount(account);
+        // 用户已存在
+        if(sysUser != null){
+            return R.fail(ErrorCode.ACCOUNT_ALREADY_EXISTS.getCode(),ErrorCode.ACCOUNT_ALREADY_EXISTS.getMsg());
+        }
+        // 2.  准备持久化
+        sysUser = new SysUser();
+        sysUser.setAccount(account);
+        sysUser.setNickname(nickname);
+        sysUser.setPassword( DigestUtils.md5Hex(password+salt));
+        sysUser.setCreateDate(System.currentTimeMillis());
+        sysUser.setLastLogin(System.currentTimeMillis());
+        sysUser.setAdmin(1);
+        sysUser.setDeleted(0);
+        sysUser.setAvatar( this.getRandomAvatar());
+        // sysUser.setSalt(salt);
+        sysUser.setSalt("");    // 先不加盐，要加盐的话，在登录时就要加从数据库读出的盐
+        sysUser.setStatus("");
+        sysUser.setEmail("");
+        // 2.1 写入数据库
+        sysUserService.save(sysUser);
+        // 2.2 创建 token
+        String token = JWTUtils.createToken(sysUser.getId());
+        // 2.3 生成 token
+        redisTemplate.opsForValue().set("TOKEN_"+token,JSON.toJSONString(sysUser),1,TimeUnit.DAYS);
+        return R.success(token);
+    }
+
+
+    // 返回一个随机的头像链接
+    private String getRandomAvatar() {
+        int i = (new Random().nextInt(avatarCount))+1;
+        return "/static/img/default_avatar_"+i+".png";
+    }
+
+
 }

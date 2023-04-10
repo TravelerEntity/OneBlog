@@ -2,6 +2,7 @@ package com.lee.blog.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lee.blog.dao.mapper.SysUserMapper;
 import com.lee.blog.dao.pojo.R;
 import com.lee.blog.dao.pojo.SysUser;
@@ -54,5 +55,17 @@ public class SysUserImpl implements SysUserService {
         }
         // 直接解析然后返回
         return R.success(JSON.parse(sysUserJson));
+    }
+
+    @Override
+    public SysUser findUserByAccount(String account) {
+        return sysUserMapper.selectOne(new QueryWrapper<SysUser>()
+                .eq("account",account)
+                .last("limit 1") );
+    }
+
+    @Override
+    public void save(SysUser sysUser) {
+        sysUserMapper.insert(sysUser);
     }
 }
