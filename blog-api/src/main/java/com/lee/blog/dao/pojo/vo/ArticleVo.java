@@ -2,7 +2,6 @@ package com.lee.blog.dao.pojo.vo;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,20 +15,20 @@ public class ArticleVo {
 
     private String summary;
 
-    private int commentCounts;
+    private Integer commentCounts;
 
-    private int viewCounts;
+    private Integer viewCounts;
 
-    private int weight;
+    private Integer weight;
 
-    // 作者 Id
+    // 作者
     private String author;
 
-    // 内容 Id
-    // private Long bodyId;
+    // 内容
+    private ArticleBodyVo body;
 
-    // 类别 Id
-    // private Long categoryId;
+    // 类别
+    private CategoryVo category;
 
     // 标签
     private List<TagVo> tags;

@@ -8,6 +8,7 @@ import com.lee.blog.dao.pojo.vo.LoginParam;
 import com.lee.blog.service.LoginService;
 import com.lee.blog.service.SysUserService;
 import com.lee.blog.utils.JWTUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,14 +28,13 @@ import java.util.concurrent.TimeUnit;
  * 登录相关 service
  */
 @Service
+@Slf4j
 public class LoginServiceImpl implements LoginService {
     // 固定加密盐
     private static final String salt = "Md5_password_salt_2023-04-09-15:18";
 
     @Value("${default_avatar_count}")
     private int avatarCount;
-
-    Logger logger = LogManager.getLogger(this.getClass());
 
     @Autowired
     SysUserService sysUserService;
@@ -45,7 +45,6 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public R login(LoginParam loginParam) {
-        logger.info(loginParam);
         // 1. 先获取参数，校验是否合法
         String account = loginParam.getAccount();
         String password = loginParam.getPassword();

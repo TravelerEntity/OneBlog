@@ -55,4 +55,9 @@ public class ArticleController {
     public R listArchives(){
         return articleService.listArchives();
     }
+
+    @PostMapping("view/{id}")
+    public R view(@PathVariable Long id){
+        return articleService.findArticleById(id);
+    }
 }

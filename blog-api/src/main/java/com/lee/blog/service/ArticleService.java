@@ -2,7 +2,6 @@ package com.lee.blog.service;
 
 import com.lee.blog.dao.pojo.R;
 import com.lee.blog.dao.pojo.vo.PageParams;
-import org.springframework.stereotype.Service;
 
 /**
  * Created by Lee Yian on 2023/4/4 17:36
@@ -36,4 +35,11 @@ public interface ArticleService {
      * @return R
      */
     R listArchives();
+
+    /**
+     * 根据 id 返回文章的详情
+     * @param id 文章 id long
+     * @return R
+     */
+    R findArticleById(Long id);
 }
