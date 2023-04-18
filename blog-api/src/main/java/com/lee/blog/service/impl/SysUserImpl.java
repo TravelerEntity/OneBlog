@@ -7,9 +7,11 @@ import com.lee.blog.dao.mapper.SysUserMapper;
 import com.lee.blog.dao.pojo.R;
 import com.lee.blog.dao.pojo.SysUser;
 import com.lee.blog.dao.pojo.vo.ErrorCode;
+import com.lee.blog.dao.pojo.vo.UserVo;
 import com.lee.blog.service.LoginService;
 import com.lee.blog.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,6 @@ import org.springframework.stereotype.Service;
 public class SysUserImpl implements SysUserService {
     @Autowired
     SysUserMapper sysUserMapper;
-
 
     @Autowired
     LoginService loginService;
@@ -67,5 +68,13 @@ public class SysUserImpl implements SysUserService {
     @Override
     public void save(SysUser sysUser) {
         sysUserMapper.insert(sysUser);
+    }
+
+    @Override
+    public UserVo findUserVoById(Long userId) {
+        SysUser user = sysUserMapper.selectById(userId);
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user,userVo);
+        return userVo;
     }
 }

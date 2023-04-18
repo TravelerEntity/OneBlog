@@ -2,6 +2,7 @@ package com.lee.blog.service;
 
 import com.lee.blog.dao.pojo.R;
 import com.lee.blog.dao.pojo.SysUser;
+import com.lee.blog.dao.pojo.vo.UserVo;
 
 /**
  * Created by Lee Yian on 2023/4/4 21:41
@@ -42,4 +43,11 @@ public interface SysUserService {
      * @param sysUser sysUser
      */
     void save(SysUser sysUser);
+
+    /**
+     * 通过 userId 查找 UserVO
+     * @param userId userId
+     * @return UserVo
+     */
+    UserVo findUserVoById(Long userId);
 }

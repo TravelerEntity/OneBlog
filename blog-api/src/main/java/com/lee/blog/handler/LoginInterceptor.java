@@ -75,6 +75,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+        // 用完之后清除线程的 ThreadLocal 信息，避免内存溢出
         UserThreadLocal.remove();
     }
 }

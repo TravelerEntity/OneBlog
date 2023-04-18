@@ -56,6 +56,11 @@ public class ArticleController {
         return articleService.listArchives();
     }
 
+    /**
+     * 查看文章详情
+     * @param id 文章 id
+     * @return R
+     */
     @PostMapping("view/{id}")
     public R view(@PathVariable Long id){
         return articleService.findArticleById(id);

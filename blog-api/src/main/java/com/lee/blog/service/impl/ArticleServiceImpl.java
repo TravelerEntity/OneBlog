@@ -169,6 +169,7 @@ public class ArticleServiceImpl implements ArticleService {
             // 手动设置标签
             articleVo.setTags(tagService.findTagsByArticleId(article.getId()));
         }
+        // TODO 完整返回用户，而不是只返回一个 nickname
         if(isAuthor){
             // 手动设置作者
             articleVo.setAuthor(userService.findUserById(article.getAuthorId()).getNickname() );
@@ -187,6 +188,11 @@ public class ArticleServiceImpl implements ArticleService {
         return articleVo;
     }
 
+    /**
+     * 通过 body id 获取到 body 信息
+     * @param bodyId bodyId
+     * @return articleBodyVo
+     */
     private ArticleBodyVo findArticleBodyById(Long bodyId) {
         ArticleBody body = articleBodyMapper.selectById(bodyId);
         ArticleBodyVo bodyVo = new ArticleBodyVo();
