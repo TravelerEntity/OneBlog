@@ -14,6 +14,8 @@ public class ArticleBody {
     @TableId
     private Long id;
     private String content;
+
     private String contentHtml;
-    private String articleId;
+
+    private Long articleId;
 }

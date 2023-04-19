@@ -1,7 +1,8 @@
 package com.lee.blog.service;
 
 import com.lee.blog.dao.pojo.R;
-import com.lee.blog.dao.pojo.vo.PageParams;
+import com.lee.blog.dao.pojo.vo.params.ArticleParam;
+import com.lee.blog.dao.pojo.vo.params.PageParams;
 
 /**
  * Created by Lee Yian on 2023/4/4 17:36
@@ -42,4 +43,11 @@ public interface ArticleService {
      * @return R
      */
     R findArticleById(Long id);
+
+    /**
+     * 发布文章
+     * @param articleParam articleParam
+     * @return R
+     */
+    R publish(ArticleParam articleParam);
 }

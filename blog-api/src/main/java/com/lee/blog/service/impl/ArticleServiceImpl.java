@@ -5,15 +5,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.blog.dao.dto.Archive;
 import com.lee.blog.dao.mapper.ArticleBodyMapper;
 import com.lee.blog.dao.mapper.ArticleMapper;
-import com.lee.blog.dao.pojo.Article;
-import com.lee.blog.dao.pojo.ArticleBody;
-import com.lee.blog.dao.pojo.Category;
-import com.lee.blog.dao.pojo.R;
+import com.lee.blog.dao.mapper.ArticleTagMapper;
+import com.lee.blog.dao.pojo.*;
 import com.lee.blog.dao.pojo.vo.ArticleBodyVo;
 import com.lee.blog.dao.pojo.vo.ArticleVo;
 import com.lee.blog.dao.pojo.vo.CategoryVo;
-import com.lee.blog.dao.pojo.vo.PageParams;
+import com.lee.blog.dao.pojo.vo.TagVo;
+import com.lee.blog.dao.pojo.vo.params.ArticleParam;
+import com.lee.blog.dao.pojo.vo.params.PageParams;
 import com.lee.blog.service.*;
+import com.lee.blog.utils.UserThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.joda.time.DateTime;
@@ -22,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lee Yian on 2023/4/4 19:50
@@ -38,6 +41,9 @@ public class ArticleServiceImpl implements ArticleService {
     ArticleBodyMapper articleBodyMapper;
 
     @Autowired
+    ArticleTagMapper articleTagMapper;
+
+    @Autowired
     private TagService tagService;
 
     @Autowired
@@ -48,6 +54,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     ThreadService threadService;
+
 
     @Override
     public R listArticle(PageParams pageParams) {
@@ -135,6 +142,56 @@ public class ArticleServiceImpl implements ArticleService {
         return R.success(articleVo);
     }
 
+    @Override
+    public R publish(ArticleParam articleParam) {
+        /*
+            article、body、tag 三个对象各自保存进不同的表中
+            1. 先保存数据到 article 表中，获得 article id
+            2. 使用返回的 article id 设置给 body 和 tag
+                2.1 分别保存 body 和 tag(tag 存在才保存 tag)
+         */
+        // 设置基本属性
+        Article article = new Article();
+        article.setSummary(articleParam.getSummary());      // 从 threadLocal 中读取当前的登录用户的 id
+        article.setTitle(articleParam.getTitle());
+        article.setAuthorId(UserThreadLocal.get().getId());
+        article.setCreateDate(System.currentTimeMillis());
+        article.setWeight(Article.Article_Common);
+        article.setViewCounts(0);
+        article.setCommentCounts(0);
+        article.setCategoryId(articleParam.getCategoryVo().getId());
+        articleMapper.insert(article);      // 持久化
+
+        // 设置 body 属性
+        ArticleBody articleBody = new ArticleBody();
+        articleBody.setArticleId(article.getId());
+        articleBody.setContent(articleParam.getBodyParam().getContent());
+        articleBody.setContentHtml(articleParam.getBodyParam().getContentHtml());
+        articleBodyMapper.insert(articleBody);      // 持久化
+        log.info("article body's id should be update: "+ articleBody.getId());
+        // 设置 tag 属性
+        List<TagVo> tagVoList = articleParam.getTagVoList();
+        // 只有当 tagVoList 不为空才执行保存 tag 的操作
+        if(tagVoList != null){
+            // 循环遍历插入所有的 tag
+            tagVoList.forEach(tagVo -> {
+                // 设置 article tag 属性
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setArticleId(article.getId());
+                articleTag.setTagId(tagVo.getId());
+                articleTagMapper.insert(articleTag);        // 持久化
+            });
+        }
+
+        // 前面插入了 body 之后，会自动返回 body id 到 body 对象上，这里我们再执行一次 update 操作
+        article.setBodyId(articleBody.getId());
+        articleMapper.updateById(article);
+        // 准备返回数据
+        Map<String,String> map = new HashMap<>();
+        map.put("id",article.getId().toString());
+        return R.success(map);
+    }
+
 
     /**
      * 转换 articleList 为 articleVoList
@@ -182,7 +239,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         if(isCategory){
             // 查询并设置 category
-            CategoryVo categoryVo = categoryService.findCategoryById(article.getCategoryId());
+            CategoryVo categoryVo = categoryService.findCategoryVoById(article.getCategoryId());
             articleVo.setCategory(categoryVo);
         }
         return articleVo;

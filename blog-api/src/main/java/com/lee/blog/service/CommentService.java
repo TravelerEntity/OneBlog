@@ -1,7 +1,7 @@
 package com.lee.blog.service;
 
 import com.lee.blog.dao.pojo.R;
-import com.lee.blog.dao.pojo.vo.CommentParam;
+import com.lee.blog.dao.pojo.vo.params.CommentParam;
 
 /**
  * Created by Lee Yian on 2023/4/17 19:43

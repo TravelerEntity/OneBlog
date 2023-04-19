@@ -1,7 +1,7 @@
 package com.lee.blog.controller;
 
 import com.lee.blog.dao.pojo.R;
-import com.lee.blog.dao.pojo.vo.LoginParam;
+import com.lee.blog.dao.pojo.vo.params.LoginParam;
 import com.lee.blog.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

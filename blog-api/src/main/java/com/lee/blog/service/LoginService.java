@@ -1,7 +1,7 @@
 package com.lee.blog.service;
 
 import com.lee.blog.dao.pojo.R;
-import com.lee.blog.dao.pojo.vo.LoginParam;
+import com.lee.blog.dao.pojo.vo.params.LoginParam;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

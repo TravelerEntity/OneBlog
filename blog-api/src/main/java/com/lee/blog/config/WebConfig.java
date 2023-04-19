@@ -27,6 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/test")   // '/**/ 则表示匹配拦截所有页面
                 .addPathPatterns("/comments/create/change")     // 拦截添加评论
+                .addPathPatterns("/articles/publish")     // 拦截发布文章
                 ;
     }
 }

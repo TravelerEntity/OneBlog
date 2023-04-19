@@ -14,7 +14,24 @@ import java.util.List;
 
 public interface TagService {
 
+    /**
+     * 通过 article id 获取 tags
+     * @param articleId articleId
+     * @return R
+     */
     List<TagVo> findTagsByArticleId(Long articleId);
 
+
+    /**
+     * 返回 前 limit 个热门的 tag
+     * @param limit 前几个
+     * @return R
+     */
     R hots(int limit);
+
+    /**
+     * 获取所有的 tag
+     * @return R
+     */
+    R findAll();
 }

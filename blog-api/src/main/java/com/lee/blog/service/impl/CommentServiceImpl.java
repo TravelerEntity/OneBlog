@@ -5,7 +5,7 @@ import com.lee.blog.dao.mapper.CommentMapper;
 import com.lee.blog.dao.pojo.Comment;
 import com.lee.blog.dao.pojo.R;
 import com.lee.blog.dao.pojo.SysUser;
-import com.lee.blog.dao.pojo.vo.CommentParam;
+import com.lee.blog.dao.pojo.vo.params.CommentParam;
 import com.lee.blog.dao.pojo.vo.CommentVo;
 import com.lee.blog.dao.pojo.vo.UserVo;
 import com.lee.blog.service.CommentService;
@@ -78,11 +78,13 @@ public class CommentServiceImpl implements CommentService {
         } else {
             // 正常设置 level 和 toUserId
             comment.setLevel(2);
+            // log.info("to user id :"+commentParam.getToUserId());
+            // log.info("user id(author id) :"+user.getId() );
             comment.setToUid(commentParam.getToUserId());
         }
 
-        log.info(comment.toString());
-        log.info(commentParam.toString());
+        // log.info(comment.toString());
+        // log.info(commentParam.toString());
 
         // 持久化
         this.commentMapper.insert(comment);
@@ -129,7 +131,7 @@ public class CommentServiceImpl implements CommentService {
         // 4. 只有当 level > 1 （为子评论）时，才执行查询被评论的用户信息
         if (level > 1){
             // 4. 查询被评论的对象信息
-            UserVo beenCommentedUserVo = this.sysUserService.findUserVoById(comment.getAuthorId());
+            UserVo beenCommentedUserVo = this.sysUserService.findUserVoById(comment.getToUid());
             commentVo.setToUser(beenCommentedUserVo);
         }
         return commentVo;

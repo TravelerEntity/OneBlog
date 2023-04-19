@@ -1,6 +1,6 @@
 package com.lee.blog.service;
 
-import com.lee.blog.dao.pojo.Category;
+import com.lee.blog.dao.pojo.R;
 import com.lee.blog.dao.pojo.vo.CategoryVo;
 
 /**
@@ -9,9 +9,15 @@ import com.lee.blog.dao.pojo.vo.CategoryVo;
 public interface CategoryService {
 
     /**
-     *
-     * @param id
-     * @return
+     * 返回 category Vo by category id
+     * @param id category id
+     * @return CategoryVo
      */
-    CategoryVo findCategoryById(Long id);
+    CategoryVo findCategoryVoById(Long id);
+
+    /**
+     * 获取全部的 Category
+     * @return R
+     */
+    R findAll();
 }

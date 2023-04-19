@@ -1,5 +1,6 @@
 package com.lee.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lee.blog.dao.mapper.TagMapper;
 import com.lee.blog.dao.pojo.R;
 import com.lee.blog.dao.pojo.Tag;
@@ -41,6 +42,16 @@ public class TagServiceImpl implements TagService {
         List<Tag> tagList = tagmapper.selectBatchIds(tagIdList);
 
         return R.success(tagList);
+    }
+
+    @Override
+    public R findAll() {
+        // 直接传 null 也表示不需要附加任何查询条件
+        List<Tag> tagList = tagmapper.selectList(null);
+        List<TagVo> tagVoList = copyList(tagList);
+
+        return R.success(tagVoList);
+
     }
 
     // 根据文章 id 查询标签

@@ -28,4 +28,9 @@ public class TagController {
         return tagService.hots(limit);
     }
 
+    @GetMapping
+    public R tags(){
+        return tagService.findAll();
+    }
+
 }

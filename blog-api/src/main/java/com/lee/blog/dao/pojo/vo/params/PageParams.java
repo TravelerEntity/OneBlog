@@ -1,4 +1,4 @@
-package com.lee.blog.dao.pojo.vo;
+package com.lee.blog.dao.pojo.vo.params;
 
 import lombok.Data;
 

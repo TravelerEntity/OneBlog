@@ -1,7 +1,8 @@
 package com.lee.blog.controller;
 
 import com.lee.blog.dao.pojo.R;
-import com.lee.blog.dao.pojo.vo.PageParams;
+import com.lee.blog.dao.pojo.vo.params.ArticleParam;
+import com.lee.blog.dao.pojo.vo.params.PageParams;
 import com.lee.blog.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -64,5 +65,10 @@ public class ArticleController {
     @PostMapping("view/{id}")
     public R view(@PathVariable Long id){
         return articleService.findArticleById(id);
+    }
+
+    @PostMapping("publish")
+    public R publish(@RequestBody ArticleParam articleParam){
+        return articleService.publish(articleParam);
     }
 }
