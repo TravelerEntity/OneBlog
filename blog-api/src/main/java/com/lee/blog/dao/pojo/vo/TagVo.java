@@ -1,5 +1,6 @@
 package com.lee.blog.dao.pojo.vo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -7,9 +8,12 @@ import lombok.Data;
  */
 
 @Data
+@TableName("ms_tag")
 public class TagVo {
 
     private Long id;
 
     private String tagName;
+
+    private String avatar;
 }

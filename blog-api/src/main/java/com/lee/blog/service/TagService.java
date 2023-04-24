@@ -30,8 +30,21 @@ public interface TagService {
     R hots(int limit);
 
     /**
-     * 获取所有的 tag
+     * 获取所有的 tag，精简版
      * @return R
      */
     R findAll();
+
+    /**
+     * 返回所有的 tag
+     * @return R
+     */
+    R findAllDetail();
+
+    /**
+     * 根据 id 查找 tag
+     * @param tagId tagId
+     * @return R
+     */
+    R findTagById(Long tagId);
 }

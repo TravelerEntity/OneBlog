@@ -20,4 +20,10 @@ public interface CategoryService {
      * @return R
      */
     R findAll();
+
+    /**
+     * 获取全部的 categories detail
+     * @return R
+     */
+    R findAllDetail();
 }

@@ -17,6 +17,7 @@ import com.lee.blog.service.*;
 import com.lee.blog.utils.UserThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,33 @@ public class ArticleServiceImpl implements ArticleService {
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
         // 构造 lambdaQueryWrapper 对象, 查询对象
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        // 增加查询条件
+        // 查询顺序，现根据是否置顶排序，再根据日期排序
         queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
+
+        // 如果 category id 不为空，就需要按照 category id 进行查询
+        if (pageParams.getCategoryId() != null){
+            queryWrapper.eq(Article::getCategoryId,pageParams.getCategoryId());
+        }
+
+        if(pageParams.getTagId() != null){
+            // 通过 tag id 获取相应的 article ids
+            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper();
+            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId,pageParams.getTagId());
+            List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
+
+            // 构造一个 article id 集合
+            List<Long> articleIds = new ArrayList<>();
+            articleTags.forEach(articleTag -> {
+                articleIds.add(articleTag.getArticleId());
+            });
+
+            // 如果 tag id 对应的 article id 不为空，就拼接一个嵌套查询
+            if(articleIds.size() > 0){
+                // ... in (1,2,3)
+                queryWrapper.in(Article::getId,articleIds);
+            }
+
+        }
 
         // 查询具体某一页
         Page<Article> resultPage = articleMapper.selectPage(page, queryWrapper);
@@ -149,18 +175,20 @@ public class ArticleServiceImpl implements ArticleService {
             1. 先保存数据到 article 表中，获得 article id
             2. 使用返回的 article id 设置给 body 和 tag
                 2.1 分别保存 body 和 tag(tag 存在才保存 tag)
+            3. body id 返回后，再重新更新一次 article 表
+            4. 因为 tag 没有和 article 表直接关联，所以不需要更新 tag id
          */
         // 设置基本属性
         Article article = new Article();
-        article.setSummary(articleParam.getSummary());      // 从 threadLocal 中读取当前的登录用户的 id
+        article.setSummary(articleParam.getSummary());
         article.setTitle(articleParam.getTitle());
-        article.setAuthorId(UserThreadLocal.get().getId());
+        article.setAuthorId(UserThreadLocal.get().getId());     // 从 threadLocal 中读取当前的登录用户的 id
         article.setCreateDate(System.currentTimeMillis());
         article.setWeight(Article.Article_Common);
         article.setViewCounts(0);
         article.setCommentCounts(0);
         article.setCategoryId(articleParam.getCategoryVo().getId());
-        articleMapper.insert(article);      // 持久化
+        articleMapper.insert(article);      // 持久化，持久化完成后会自动返回 id 给 article 对象
 
         // 设置 body 属性
         ArticleBody articleBody = new ArticleBody();
@@ -189,6 +217,7 @@ public class ArticleServiceImpl implements ArticleService {
         // 准备返回数据
         Map<String,String> map = new HashMap<>();
         map.put("id",article.getId().toString());
+
         return R.success(map);
     }
 
@@ -223,12 +252,12 @@ public class ArticleServiceImpl implements ArticleService {
 
         // 并不是所有接口都需要 标签和作者信息, 所以我们可以编写分支
         if(isTag){
-            // 手动设置标签
+            // 查询并设置标签
             articleVo.setTags(tagService.findTagsByArticleId(article.getId()));
         }
         // TODO 完整返回用户，而不是只返回一个 nickname
         if(isAuthor){
-            // 手动设置作者
+            // 查询并设置作者
             articleVo.setAuthor(userService.findUserById(article.getAuthorId()).getNickname() );
         }
         if(isBody){

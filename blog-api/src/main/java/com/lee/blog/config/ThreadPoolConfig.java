@@ -9,10 +9,12 @@ import java.util.concurrent.Executor;
 
 /**
  * Created by Lee Yian on 2023/4/17 16:42
+ * 线程池配置
  * <a href="https://www.jianshu.com/p/0b8443b1adc9">关于@Configuration和@Bean的用法和理解</a>
  */
 
 @Configuration
+// 开启多线程
 @EnableAsync
 public class ThreadPoolConfig {
 

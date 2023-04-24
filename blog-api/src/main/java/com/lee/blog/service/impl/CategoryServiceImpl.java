@@ -1,9 +1,11 @@
 package com.lee.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lee.blog.dao.mapper.CategoryMapper;
 import com.lee.blog.dao.pojo.Category;
 import com.lee.blog.dao.pojo.R;
+import com.lee.blog.dao.pojo.Tag;
 import com.lee.blog.dao.pojo.vo.CategoryVo;
 import com.lee.blog.service.CategoryService;
 import org.springframework.beans.BeanUtils;
@@ -31,9 +33,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public R findAll() {
-        List<Category> categoryList = categoryMapper.selectList(new QueryWrapper<>());
+        // 本方法只需要 id 和 name 属性
+        LambdaQueryWrapper<Category> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.select(Category::getId, Category::getCategoryName);
+
+        List<Category> categoryList = categoryMapper.selectList(lambdaQueryWrapper);
+
         List<CategoryVo> categoryVoList = copyList(categoryList);
+
         return R.success(categoryVoList);
+    }
+
+    @Override
+    public R findAllDetail() {
+        List<Category> categoryList = categoryMapper.selectList(null);
+        return R.success(categoryList);
     }
 
     /**

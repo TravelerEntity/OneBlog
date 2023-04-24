@@ -4,6 +4,7 @@ import com.lee.blog.dao.pojo.R;
 import com.lee.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,9 +29,27 @@ public class TagController {
         return tagService.hots(limit);
     }
 
+    /**
+     * 返回所有的标签
+     * @return tag list
+     */
     @GetMapping
     public R tags(){
         return tagService.findAll();
+    }
+
+    /**
+     * 返回所有的标签 detail
+     * @return tag list
+     */
+    @GetMapping("detail")
+    public R tagDetails(){
+        return tagService.findAllDetail();
+    }
+
+    @GetMapping("detail/{id}")
+    public R tagDetailId(@PathVariable("id") Long tagId){
+        return tagService.findTagById(tagId);
     }
 
 }

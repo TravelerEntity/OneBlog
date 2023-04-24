@@ -1,5 +1,6 @@
 package com.lee.blog.controller;
 
+import com.lee.blog.common.aop.LogAnnotation;
 import com.lee.blog.dao.pojo.R;
 import com.lee.blog.dao.pojo.vo.params.ArticleParam;
 import com.lee.blog.dao.pojo.vo.params.PageParams;
@@ -23,6 +24,7 @@ public class ArticleController {
      * @param pageParams pageParams vo, it has a page int And a pageSize
      * @return R
      */
+    @LogAnnotation(module = "文章",operation = "获取文章列表")
     @PostMapping()
     public R listArticles(@RequestBody PageParams pageParams){
         return articleService.listArticle(pageParams);

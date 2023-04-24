@@ -46,13 +46,34 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public R findAll() {
-        // 直接传 null 也表示不需要附加任何查询条件
-        List<Tag> tagList = tagmapper.selectList(null);
+        // 本方法只需要 id 和 name 属性
+        LambdaQueryWrapper<Tag> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.select(Tag::getTagName, Tag::getId);
+
+        List<Tag> tagList = tagmapper.selectList(lambdaQueryWrapper);
+
         List<TagVo> tagVoList = copyList(tagList);
 
         return R.success(tagVoList);
 
     }
+
+    @Override
+    public R findAllDetail() {
+        // 直接传 null 也表示不需要附加任何查询条件
+        List<Tag> tagList = tagmapper.selectList(null);
+        List<TagVo> tagVoList = copyList(tagList);
+
+        return R.success(tagVoList);
+    }
+
+    @Override
+    public R findTagById(Long tagId) {
+        Tag tag = tagmapper.selectById(tagId);
+        TagVo tagVo = copyOne(tag);
+        return R.success(tagVo);
+    }
+
 
     // 根据文章 id 查询标签
     @Override
@@ -71,7 +92,12 @@ public class TagServiceImpl implements TagService {
     private TagVo copyOne(Tag tag) {
         TagVo tagVo = new TagVo();
         // 使用工具类进行复制属性, 它可以自动复制相同名字的属性
-        BeanUtils.copyProperties(tag,tagVo);
+        try{
+            BeanUtils.copyProperties(tag,tagVo);
+        } catch (IllegalArgumentException ex){
+            ex.printStackTrace();
+        }
+
         return tagVo;
     }
 }

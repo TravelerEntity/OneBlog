@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThreadService {
 
+
+    // 线程服务，此方法执行时由线程池单开一个线程执行
     @Async("taskExecutor")
     public void updateViewCount(ArticleMapper articleMapper, Article article) {
         /*  这里我们拿到了 articleMapper 和 article
@@ -27,6 +29,7 @@ public class ThreadService {
 
         LambdaQueryWrapper<Article> updateWrapper = new LambdaQueryWrapper<>();
         updateWrapper.eq(Article::getId,article.getId());
+        // 更新之前查看一下数据库中的 viewCounts 已经变动，如果变动就不要修改
         updateWrapper.eq(Article::getViewCounts,article.getViewCounts());
 
         // sql = update article set view_count = #{articleUpdate.viewCount} where id = #{article.id} and view_count = #{view_count}

@@ -13,4 +13,10 @@ public class PageParams {
 
     // how many records
     private int pageSize = 10;
+
+    private Long categoryId;
+
+    private Long tagId;
+
+    private String sort;
 }

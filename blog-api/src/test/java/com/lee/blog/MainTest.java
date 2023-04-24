@@ -1,5 +1,6 @@
 package com.lee.blog;
 
+import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,10 @@ public class MainTest {
             int u3 = (new Random().nextInt(6))+1;
             System.out.println("/static/img/default_avatar_"+u3+".png");
         }
+    }
 
+    @Test
+    public void methodCiteTest(){
+        String a = "hello world";
     }
 }
