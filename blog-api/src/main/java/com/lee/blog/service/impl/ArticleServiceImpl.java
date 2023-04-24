@@ -1,6 +1,7 @@
 package com.lee.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.blog.dao.dto.Archive;
 import com.lee.blog.dao.mapper.ArticleBodyMapper;
@@ -57,57 +58,65 @@ public class ArticleServiceImpl implements ArticleService {
     ThreadService threadService;
 
 
+    // @Override
+    // public R listArticle(PageParams pageParams) {
+    //     // 分页查询
+    //     // 构造 mybatisPlus 的分页对象
+    //     Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+    //     // 构造 lambdaQueryWrapper 对象, 查询对象
+    //     LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+    //     // 查询顺序，现根据是否置顶排序，再根据日期排序
+    //     queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
+    //
+    //     // 如果 category id 不为空，就需要按照 category id 进行查询
+    //     if (pageParams.getCategoryId() != null){
+    //         queryWrapper.eq(Article::getCategoryId,pageParams.getCategoryId());
+    //     }
+    //
+    //     if(pageParams.getTagId() != null){
+    //         // 通过 tag id 获取相应的 article ids
+    //         LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+    //         articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId,pageParams.getTagId());
+    //         List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
+    //
+    //         // 构造一个 article id 集合
+    //         List<Long> articleIds = new ArrayList<>();
+    //         articleTags.forEach(articleTag -> {
+    //             articleIds.add(articleTag.getArticleId());
+    //         });
+    //
+    //         // 如果 tag id 对应的 article id 不为空，就拼接一个嵌套查询
+    //         if(articleIds.size() > 0){
+    //             // ... and id in (1,2,3)
+    //             queryWrapper.in(Article::getId,articleIds);
+    //         }
+    //
+    //     }
+    //
+    //     // 查询具体某一页
+    //     Page<Article> resultPage = articleMapper.selectPage(page, queryWrapper);
+    //     /* 为了避免视图模型和数据库过度耦合, 所以需要 VO 对象来解耦`";'
+    //      * VO 是与前端直接交互的对象, 因为前端通常不会需要数据库的全部字段
+    //      * 这样做的目的在于, 如果前端显示的对象字段有变化(可能行很大), 那么我们后端可以任意调整
+    //      * 而不用去改动原有的 POJO 打乱和数据库的映射
+    //      * POJO 是与数据库进行一对一映射的对象
+    //      */
+    //
+    //     List<Article> records = resultPage.getRecords();
+    //     // 把 pojo 对象转换成 vo 对象
+    //     List<ArticleVo> voRecords = copyList(records, true,true);
+    //
+    //     return R.success(voRecords);
+    // }
+
     @Override
     public R listArticle(PageParams pageParams) {
-        // 分页查询
-        // 构造 mybatisPlus 的分页对象
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        // 构造 lambdaQueryWrapper 对象, 查询对象
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        // 查询顺序，现根据是否置顶排序，再根据日期排序
-        queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
+        IPage<Article> articleIPage = this.articleMapper.listArticle(page, pageParams.getCategoryId(), pageParams.getTagId(), pageParams.getYear(), pageParams.getMonth());
+        List<ArticleVo> articleVoList = copyList(articleIPage.getRecords(), true, true);
 
-        // 如果 category id 不为空，就需要按照 category id 进行查询
-        if (pageParams.getCategoryId() != null){
-            queryWrapper.eq(Article::getCategoryId,pageParams.getCategoryId());
-        }
-
-        if(pageParams.getTagId() != null){
-            // 通过 tag id 获取相应的 article ids
-            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper();
-            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId,pageParams.getTagId());
-            List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
-
-            // 构造一个 article id 集合
-            List<Long> articleIds = new ArrayList<>();
-            articleTags.forEach(articleTag -> {
-                articleIds.add(articleTag.getArticleId());
-            });
-
-            // 如果 tag id 对应的 article id 不为空，就拼接一个嵌套查询
-            if(articleIds.size() > 0){
-                // ... in (1,2,3)
-                queryWrapper.in(Article::getId,articleIds);
-            }
-
-        }
-
-        // 查询具体某一页
-        Page<Article> resultPage = articleMapper.selectPage(page, queryWrapper);
-        /* 为了避免视图模型和数据库过度耦合, 所以需要 VO 对象来解耦`";'
-         * VO 是与前端直接交互的对象, 因为前端通常不会需要数据库的全部字段
-         * 这样做的目的在于, 如果前端显示的对象字段有变化(可能行很大), 那么我们后端可以任意调整
-         * 而不用去改动原有的 POJO 打乱和数据库的映射
-         * POJO 是与数据库进行一对一映射的对象
-         */
-
-        List<Article> records = resultPage.getRecords();
-        // 把 pojo 对象转换成 vo 对象
-        List<ArticleVo> voRecords = copyList(records, true,true);
-
-        return R.success(voRecords);
+        return R.success(articleVoList);
     }
-
     @Override
     public R hotArticle(int limit) {
         // 1. 构造查询对象
