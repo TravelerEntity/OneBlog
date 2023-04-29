@@ -1,7 +1,8 @@
 package com.lee.blog.dao.pojo.vo;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.List;
  */
 @Data
 public class ArticleVo {
-    @JsonSerialize(using = ToStringSerializer.class)
+    // 如果使用 fastJson，那么序列化和反序列化的相关包也要使用 fastJson 的，这样才能避免雪花 id 精度丢失的问题
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
     private String title;

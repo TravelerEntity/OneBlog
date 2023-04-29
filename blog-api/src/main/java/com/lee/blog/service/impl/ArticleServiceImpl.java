@@ -109,10 +109,13 @@ public class ArticleServiceImpl implements ArticleService {
     //     return R.success(voRecords);
     // }
 
+
     @Override
     public R listArticle(PageParams pageParams) {
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        IPage<Article> articleIPage = this.articleMapper.listArticle(page, pageParams.getCategoryId(), pageParams.getTagId(), pageParams.getYear(), pageParams.getMonth());
+        // IPage 的 getRecords 方法可以获得 查询结果
+        IPage<Article> articleIPage = this.articleMapper.listArticle(page, pageParams.getCategoryId(),
+                pageParams.getTagId(), pageParams.getYear(), pageParams.getMonth());
         List<ArticleVo> articleVoList = copyList(articleIPage.getRecords(), true, true);
 
         return R.success(articleVoList);

@@ -1,6 +1,8 @@
 package com.lee.blog.dao.pojo.vo.params;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lee.blog.dao.pojo.vo.CategoryVo;
 import com.lee.blog.dao.pojo.vo.TagVo;
 import lombok.Data;
@@ -14,7 +16,7 @@ import java.util.List;
 @Data
 public class ArticleParam {
     private String title;
-
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     @JsonProperty("body")

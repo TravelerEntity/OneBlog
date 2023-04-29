@@ -19,7 +19,7 @@ public interface LoginService {
     R login(LoginParam loginParam);
 
     /**
-     * 检查 token 是否合法，如果合法且存在于 Redis 中，就返回 Redis 对应的用户
+     * 检查 token 是否合法，如果合法且存在于 Redis 中，就返回  对应的用户
      * @param token token
      * @return SysUsr Json 格式
      */

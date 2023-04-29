@@ -1,9 +1,9 @@
 package com.lee.blog.dao.pojo.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.util.List;
@@ -24,9 +24,10 @@ public class CommentVo {
         对于 Long 类型的数据，在序列化为 JSON 时，会被转为 js 的 Number 类型
         但是雪花 id 的长度超出了 Number 类型，所以就会出现值不一样的问题
         因此我们需要使用 @JsonSerialize(using = ToStringSerializer.class)
+        如果我们使用了 fastJson，就要使用  @JSONField(serializeUsing = ToStringSerializer.class) 注解
         注解来使得我们的 Long 型数据以 String 格式被转成 JSON
      */
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
     private UserVo author;

@@ -1,7 +1,8 @@
 package com.lee.blog.dao.pojo.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 /**
@@ -10,7 +11,7 @@ import lombok.Data;
 @Data
 public class UserVo {
 
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
     private String avatar;

@@ -1,6 +1,7 @@
 package com.lee.blog.dao.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 

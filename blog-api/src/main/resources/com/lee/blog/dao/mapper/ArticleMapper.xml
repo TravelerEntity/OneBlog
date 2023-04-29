@@ -12,7 +12,7 @@
         from ms_article group by year,month order by year,month
     </select>
 
-
+    <!--    %Y 表示提取 year 部分 -->
     <select id="listArticle" resultType="com.lee.blog.dao.pojo.Article">
         select * from ms_article
         <where>
@@ -23,7 +23,6 @@
                and id in (select article_id from ms_article_tag where tag_id = #{tagId} )
             </if>
             <if test="year != null and year.length > 0 and month != null and month.length > 0">
-                 # %Y 表示提取 year 部分
                 and ( FROM_UNIXTIME(create_date/1000, '%Y') =  #{year}
                 and FROM_UNIXTIME(create_date/1000, '%m') = #{month} )
             </if>

@@ -1,5 +1,7 @@
 package com.lee.blog.dao.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
