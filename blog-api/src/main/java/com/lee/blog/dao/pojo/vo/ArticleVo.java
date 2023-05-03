@@ -28,7 +28,7 @@ public class ArticleVo {
     private Integer weight;
 
     // 作者
-    private String author;
+    private UserVo author;
 
     // 内容
     private ArticleBodyVo body;

@@ -8,10 +8,7 @@ import com.lee.blog.dao.mapper.ArticleBodyMapper;
 import com.lee.blog.dao.mapper.ArticleMapper;
 import com.lee.blog.dao.mapper.ArticleTagMapper;
 import com.lee.blog.dao.pojo.*;
-import com.lee.blog.dao.pojo.vo.ArticleBodyVo;
-import com.lee.blog.dao.pojo.vo.ArticleVo;
-import com.lee.blog.dao.pojo.vo.CategoryVo;
-import com.lee.blog.dao.pojo.vo.TagVo;
+import com.lee.blog.dao.pojo.vo.*;
 import com.lee.blog.dao.pojo.vo.params.ArticleParam;
 import com.lee.blog.dao.pojo.vo.params.PageParams;
 import com.lee.blog.service.*;
@@ -270,7 +267,10 @@ public class ArticleServiceImpl implements ArticleService {
         // TODO 完整返回用户，而不是只返回一个 nickname
         if(isAuthor){
             // 查询并设置作者
-            articleVo.setAuthor(userService.findUserById(article.getAuthorId()).getNickname() );
+            SysUser user = userService.findUserById(article.getAuthorId());
+            UserVo userVo = new UserVo();
+            BeanUtils.copyProperties(user, userVo);
+            articleVo.setAuthor(userVo );
         }
         if(isBody){
             // 查询并设置 body
