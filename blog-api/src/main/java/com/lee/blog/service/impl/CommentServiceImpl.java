@@ -88,7 +88,7 @@ public class CommentServiceImpl implements CommentService {
 
         // 持久化
         this.commentMapper.insert(comment);
-        return R.success(null);
+        return R.success(comment);
     }
 
     /**

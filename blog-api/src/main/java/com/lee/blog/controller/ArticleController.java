@@ -76,6 +76,11 @@ public class ArticleController {
         return articleService.findArticleById(id);
     }
 
+    @PostMapping("/{id}")
+    public R write(@PathVariable Long id){
+        return articleService.findArticleById(id);
+    }
+
     @PostMapping("publish")
     public R publish(@RequestBody ArticleParam articleParam){
         return articleService.publish(articleParam);
