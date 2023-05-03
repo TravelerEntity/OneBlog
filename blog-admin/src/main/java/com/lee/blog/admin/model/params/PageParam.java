@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * Created by Lee Yian on 2023/4/30 21:13
+ * 从前端接收的首页查询参数
  */
 
 @Data
