@@ -25,7 +25,6 @@ public class ArticleController {
      * @param pageParams pageParams vo, it has a page int And a pageSize
      * @return R
      */
-    @CacheAnnotation(expireTime = 5 * 60 * 1000L, name = "listArticles")
     @LogAnnotation(module = "文章",operation = "获取文章列表")
     @PostMapping()
     public R listArticles(@RequestBody PageParams pageParams){
@@ -38,7 +37,6 @@ public class ArticleController {
      * @return R
      */
     @PostMapping("hot")
-    @CacheAnnotation(expireTime = 4 * 60 * 1000L, name = "hot")
     public R hotArticle(){
         int limit = 5;
         return articleService.hotArticle(limit);
@@ -49,7 +47,6 @@ public class ArticleController {
      * @return R
      */
     @PostMapping("new")
-    @CacheAnnotation(expireTime = 6 * 60 * 1000L, name = "new")
     public R newArticles(){
         int limit = 5;
         return articleService.newArticle(limit);
@@ -60,7 +57,6 @@ public class ArticleController {
      * @return R
      */
     @PostMapping("listArchives")
-    @CacheAnnotation(expireTime = 7 * 60 * 1000L, name = "archives")
     public R listArchives(){
         return articleService.listArchives();
     }
@@ -71,7 +67,6 @@ public class ArticleController {
      * @return R
      */
     @PostMapping("view/{id}")
-    @CacheAnnotation(expireTime = 2 * 60 * 1000L, name = "new")
     public R view(@PathVariable Long id){
         return articleService.findArticleById(id);
     }
